@@ -120,6 +120,15 @@ body {
   opacity: 1;
 }
 
+.settings-icon svg, .back-icon svg {
+  display: block;
+  color: var(--text-dark);
+  transition: color 0.2s;
+}
+.settings-icon:hover svg, .back-icon:hover svg {
+  color: var(--primary);
+}
+
 main {
   flex: 1;
   display: flex;
