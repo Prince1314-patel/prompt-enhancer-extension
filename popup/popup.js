@@ -2,6 +2,9 @@ const promptView = document.getElementById('prompt-view');
 const settingsView = document.getElementById('settings-view');
 const settingsIcon = document.getElementById('settings-icon');
 const backToHomeIcon = document.getElementById('back-to-home-icon');
+const historyIcon = document.getElementById('history-icon');
+const historyView = document.getElementById('history-view');
+const backToHomeFromHistory = document.getElementById('back-to-home-from-history');
 
 // Prompt Enhancer Elements
 const enhanceBtn = document.getElementById('enhance-btn');
@@ -143,6 +146,20 @@ backToHomeIcon.addEventListener('click', () => {
   showRandomFunFact(); // Show new fun fact when returning to prompt view
 });
 
+historyIcon.addEventListener('click', () => {
+  promptView.style.display = 'none';
+  settingsView.style.display = 'none';
+  historyView.style.display = 'flex';
+});
+
+backToHomeFromHistory.addEventListener('click', () => {
+  historyView.style.display = 'none';
+  promptView.style.display = 'flex';
+});
+
+let lastOriginalPrompt = '';
+let lastEnhancedPrompt = '';
+
 // --- Prompt Enhancement Logic ---
 enhanceBtn.addEventListener('click', async () => {
   const prompt = promptInput.value.trim();
@@ -152,7 +169,6 @@ enhanceBtn.addEventListener('click', async () => {
     const apiKey = result.groqApiKey;
     if (!apiKey) {
       outputText.textContent = 'API key not set. Please go to settings.';
-      // Instead of showing setApiKeyButton, just show a message.
       showSpinner(false);
       return;
     }
@@ -165,13 +181,16 @@ enhanceBtn.addEventListener('click', async () => {
 
     enhanceBtn.disabled = true;
     showSpinner(true);
+    // Store the original prompt for comparison
+    lastOriginalPrompt = prompt;
     chrome.runtime.sendMessage({ action: 'enhance', prompt, type }, (response) => {
       enhanceBtn.disabled = false;
       showSpinner(false);
       if (response.error) {
         outputText.textContent = response.error;
       } else {
-        outputText.textContent = (response.enhancedPrompt || 'No response.').trim();
+        lastEnhancedPrompt = (response.enhancedPrompt || 'No response.').trim();
+        outputText.textContent = lastEnhancedPrompt;
         launchConfetti();
         showRandomFunFact();
       }
@@ -253,4 +272,56 @@ if (themeToggle) {
   });
 }
 
-document.addEventListener('DOMContentLoaded', loadTheme); 
+document.addEventListener('DOMContentLoaded', loadTheme);
+
+// --- Compare Modal Logic ---
+const compareBtn = document.getElementById('compare-btn');
+const compareModal = document.getElementById('compare-modal');
+const closeCompareModal = document.getElementById('close-compare-modal');
+const compareOriginal = document.getElementById('compare-original');
+const compareEnhanced = document.getElementById('compare-enhanced');
+
+function diffWords(oldStr, newStr) {
+  // Simple word diff, returns array of {value, added, removed}
+  const o = oldStr.split(/(\s+)/);
+  const n = newStr.split(/(\s+)/);
+  let outOld = '', outNew = '';
+  let i = 0, j = 0;
+  while (i < o.length || j < n.length) {
+    if (o[i] === n[j]) {
+      outOld += o[i] || '';
+      outNew += n[j] || '';
+      i++; j++;
+    } else if (n[j] && !o.includes(n[j])) {
+      outNew += `<span class='diff-added'>${n[j]}</span>`;
+      j++;
+    } else if (o[i] && !n.includes(o[i])) {
+      outOld += `<span class='diff-removed'>${o[i]}</span>`;
+      i++;
+    } else {
+      outOld += o[i] || '';
+      outNew += n[j] || '';
+      i++; j++;
+    }
+  }
+  return { old: outOld, new: outNew };
+}
+
+compareBtn.addEventListener('click', () => {
+  if (!lastOriginalPrompt || !lastEnhancedPrompt) return;
+  const diff = diffWords(lastOriginalPrompt, lastEnhancedPrompt);
+  compareOriginal.innerHTML = diff.old;
+  compareEnhanced.innerHTML = diff.new;
+  compareModal.style.display = 'flex';
+});
+
+closeCompareModal.addEventListener('click', () => {
+  compareModal.style.display = 'none';
+});
+
+// Close modal on overlay click
+compareModal.addEventListener('click', (e) => {
+  if (e.target === compareModal || e.target.classList.contains('compare-modal-overlay')) {
+    compareModal.style.display = 'none';
+  }
+}); 

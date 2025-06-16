@@ -282,3 +282,91 @@ button:hover {
     border-radius: 0;
   }
 }
+
+/* Compare Modal Styles */
+.compare-modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.compare-modal-overlay {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.35);
+  z-index: 1;
+}
+.compare-modal-content {
+  position: relative;
+  z-index: 2;
+  background: var(--background-alt);
+  border-radius: 10px;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.18);
+  padding: 24px 18px 18px 18px;
+  min-width: 320px;
+  max-width: 90vw;
+  min-height: 220px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+}
+#close-compare-modal {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--text-dark);
+  cursor: pointer;
+  z-index: 3;
+}
+.compare-columns {
+  display: flex;
+  gap: 18px;
+  margin-top: 18px;
+  height: 320px;
+  max-height: 60vh;
+}
+.compare-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.compare-column h3 {
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+.compare-text {
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 0.97rem;
+  color: var(--text-dark);
+  overflow: auto;
+  flex: 1;
+  min-height: 120px;
+  max-height: 220px;
+  white-space: pre-wrap;
+}
+.diff-added {
+  background: #d1fadf;
+  color: #17643b;
+}
+body.dark-theme .diff-added {
+  background: #234d2e;
+  color: #b6f7c7;
+}
+.diff-removed {
+  background: #ffe0e0;
+  color: #a33a3a;
+}
+body.dark-theme .diff-removed {
+  background: #4d2323;
+  color: #f7b6b6;
+}
