@@ -272,21 +272,45 @@ function renderHistoryList() {
       historyList.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-light);">No history yet.</div>';
       return;
     }
-    historyList.innerHTML = history.map(entry => `
-      <div class="history-entry" style="border-bottom:1px solid var(--border);padding:12px 0;">
+    historyList.innerHTML = history.map((entry, idx) => `
+      <div class="history-entry" style="border-bottom:1px solid var(--border);padding:12px 0;position:relative;">
         <div style="font-size:0.93em;color:var(--text-light);margin-bottom:4px;">${formatTime(entry.time)}</div>
-        <div style="display:flex;gap:10px;">
-          <div style="flex:1;min-width:0;">
+        <div style="display:flex;gap:10px;position:relative;">
+          <div style="flex:1;min-width:0;position:relative;">
+            <button class="copy-history-btn" data-type="original" data-idx="${idx}" aria-label="Copy original prompt" title="Copy original prompt">
+              <span class="copy-icon">📋</span>
+            </button>
             <div style="font-weight:600;font-size:0.97em;">Original</div>
             <div style="white-space:pre-wrap;overflow:hidden;text-overflow:ellipsis;max-height:3.5em;line-height:1.2;font-size:0.97em;">${entry.original.slice(0, 180)}</div>
           </div>
-          <div style="flex:1;min-width:0;">
+          <div style="flex:1;min-width:0;position:relative;">
+            <button class="copy-history-btn" data-type="enhanced" data-idx="${idx}" aria-label="Copy enhanced prompt" title="Copy enhanced prompt">
+              <span class="copy-icon">📋</span>
+            </button>
             <div style="font-weight:600;font-size:0.97em;">Enhanced</div>
             <div style="white-space:pre-wrap;overflow:hidden;text-overflow:ellipsis;max-height:3.5em;line-height:1.2;font-size:0.97em;">${entry.enhanced.slice(0, 180)}</div>
           </div>
         </div>
       </div>
     `).join('');
+
+    // Add copy event listeners
+    const copyBtns = historyList.querySelectorAll('.copy-history-btn');
+    copyBtns.forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        e.stopPropagation();
+        const idx = btn.getAttribute('data-idx');
+        const type = btn.getAttribute('data-type');
+        const prompt = history[idx][type];
+        try {
+          await navigator.clipboard.writeText(prompt);
+          const icon = btn.querySelector('.copy-icon');
+          const old = icon.textContent;
+          icon.textContent = '✔️';
+          setTimeout(() => { icon.textContent = old; }, 1000);
+        } catch {}
+      });
+    });
   });
 }
 
