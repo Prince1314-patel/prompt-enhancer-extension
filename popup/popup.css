@@ -1,0 +1,465 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+:root {
+  --primary: #4a00e0; /* Deeper, more vibrant primary */
+  --primary-hover: #5d1be0; /* Darker hover for primary */
+  --primary-light: #d8c3ff; /* Lighter primary for subtle accents */
+  --secondary: #00bcd4; /* Brighter, tech-inspired secondary (cyan) */
+  --secondary-hover: #00a4bd; /* Darker hover for secondary */
+  --success: #39ff14; /* Neon green for success */
+  --success-light: #e0ffe0; /* Light green for success background */
+  --warning: #ffea00; /* Bright yellow for warning */
+  --warning-light: #fff8c0; /* Light yellow for warning background */
+  --danger: #ff0050; /* Electric pink for danger */
+  --danger-light: #ffe0e9; /* Light pink for danger background */
+  --text-dark: #e0e0e0; /* Light text on dark background */
+  --text-medium: #a0a0a0; /* Medium gray text */
+  --text-light: #707070; /* Darker gray for subtle text */
+  --border: #333333; /* Darker, subtle border */
+  --background: #1a1a1a; /* Dark background */
+  --background-alt: #2a2a2a; /* Slightly lighter dark background */
+  --card-bg-color: #2c2c2c; /* Dark card background */
+  --card-shadow: 0 15px 40px rgba(0, 255, 255, 0.15), 0 5px 15px rgba(0, 255, 255, 0.08); /* Futuristic glow shadow */
+  --header-gradient-start: #4a00e0; /* Primary for header gradient start */
+  --header-gradient-end: #8a2be2; /* Electric violet for header gradient end */
+  --shadow-light: rgba(0, 0, 0, 0.2);
+  --shadow-medium: rgba(0, 0, 0, 0.3);
+  --shadow-strong: rgba(0, 0, 0, 0.4);
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  margin: 0;
+  padding: 0;
+  background: var(--background); /* Use dark background */
+  color: var(--text-dark); /* Use light text color */
+  position: relative;
+  min-width: 520px; /* Adjusted to accommodate wider popup-card */
+  min-height: 480px; /* Maintain fixed height for consistent popup size */
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px; /* Thicker scrollbar */
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background-alt);
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--primary); /* Use primary color for thumb */
+  border-radius: 10px;
+  border: 2px solid var(--background); /* Border matches background */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--primary-hover);
+}
+
+.popup-bg-gradient {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 0;
+  background: radial-gradient(circle at top left, var(--primary), transparent 50%),
+              radial-gradient(circle at bottom right, var(--secondary), transparent 50%); /* Dual radial gradient */
+  opacity: 0.2; /* More visible background effect */
+  pointer-events: none;
+}
+
+.popup-card {
+  background-color: var(--card-bg-color); /* Dark card background */
+  border-radius: 20px; /* More rounded corners */
+  box-shadow: var(--card-shadow); /* Futuristic glow shadow */
+  width: 500px;
+  height: 480px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.popup-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 28px 15px 28px; /* More padding */
+  background: linear-gradient(90deg, var(--header-gradient-start) 0%, var(--header-gradient-end) 100%);
+  color: #fff;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  box-shadow: 0 5px 20px rgba(0, 255, 255, 0.2); /* Enhanced header shadow */
+}
+
+.header-icon {
+  font-size: 1.8rem; /* Larger icon */
+  margin-right: 8px;
+}
+
+.header-logo {
+  height: 40px; /* Larger logo */
+  margin-right: 15px;
+  border-radius: 8px; /* More rounded corners */
+}
+
+.popup-header h1 {
+  font-size: 1.5rem; /* Larger font size */
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.02em; /* More pronounced letter spacing */
+  flex-grow: 1;
+}
+
+.settings-icon, .back-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #fff;
+  font-size: 1.6rem; /* Larger icons */
+  padding: 0;
+  width: 30px; /* Larger clickable area */
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.9; /* Slightly more opaque */
+  transition: opacity 0.3s, transform 0.3s; /* Smooth transitions */
+  outline: none;
+}
+
+.settings-icon:hover, .back-icon:hover {
+  opacity: 1;
+  transform: scale(1.1); /* Subtle hover effect */
+}
+
+.settings-icon:focus-visible, .back-icon:focus-visible {
+  outline: 2px solid rgba(255, 255, 255, 0.7); /* Brighter focus outline */
+  outline-offset: 3px;
+}
+
+.settings-icon::before {
+  content: '⚙️';
+}
+
+.back-icon::before {
+  content: '←';
+  font-weight: bold;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px; /* More padding */
+  padding-bottom: 20px;
+}
+
+label:not(.visually-hidden) {
+  display: block;
+  font-size: 1rem; /* Slightly larger font */
+  font-weight: 600;
+  color: var(--text-dark); /* Darker text for labels */
+  margin-bottom: 10px;
+}
+
+.description {
+  font-size: 1rem; /* Larger description font */
+  color: var(--text-medium);
+  margin-bottom: 20px; /* More space */
+}
+
+textarea,
+select,
+input[type="password"] {
+  width: 100%;
+  margin-bottom: 18px; /* More space */
+  border-radius: 12px; /* More rounded corners */
+  border: 1px solid var(--border);
+  font-size: 1.1rem; /* Larger font size */
+  background: var(--background-alt); /* Darker input background */
+  color: var(--text-dark); /* Light text for input */
+  transition: border-color 0.3s, box-shadow 0.3s; /* Smoother transitions */
+  box-sizing: border-box;
+  padding: 14px 16px; /* More padding */
+}
+
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23a0a0a0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>'); /* Updated arrow color */
+  background-repeat: no-repeat;
+  background-position: right 15px center; /* Adjusted arrow position */
+  padding-right: 50px; /* Make more space for the custom arrow */
+}
+
+textarea {
+  height: 140px; /* Increased height */
+  padding: 16px 18px; /* More padding */
+  resize: vertical;
+  min-height: 120px;
+}
+
+textarea:focus,
+select:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: var(--secondary); /* Focus border color */
+  box-shadow: 0 0 0 4px rgba(0, 188, 212, 0.3); /* Cyan glow on focus */
+}
+
+select:hover {
+  border-color: var(--secondary-hover);
+  box-shadow: 0 0 0 2px rgba(0, 188, 212, 0.1); /* Subtle cyan hover shadow */
+}
+
+.action-row {
+  display: flex;
+  gap: 15px; /* More space between buttons */
+  margin-bottom: 28px; /* More space */
+}
+
+button {
+  padding: 14px 22px; /* More padding */
+  border-radius: 12px; /* More rounded corners */
+  border: none;
+  font-size: 1.1rem; /* Larger font size */
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--primary);
+  color: #fff;
+  transition: all 0.3s ease; /* Smoother transitions */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px; /* More space between icon and text */
+  position: relative;
+  overflow: hidden;
+  flex: 1;
+  box-shadow: 0 5px 15px rgba(74, 0, 224, 0.2); /* Deeper primary shadow */
+}
+
+button:hover {
+  background: var(--primary-hover);
+  box-shadow: 0 8px 20px rgba(74, 0, 224, 0.3); /* More pronounced hover shadow */
+  transform: translateY(-3px); /* More pronounced lift effect */
+}
+
+button:active {
+  background: var(--primary-hover);
+  transform: translateY(0);
+  box-shadow: 0 2px 8px rgba(74, 0, 224, 0.1); /* Flatter shadow on active */
+}
+
+button:focus-visible {
+  outline: 2px solid var(--secondary); /* Cyan outline on focus */
+  outline-offset: 3px;
+}
+
+.btn-icon {
+  font-size: 1.3em; /* Larger icons */
+}
+
+#copy-btn {
+  position: relative;
+  background: var(--secondary);
+}
+
+#copy-btn:hover {
+  background: var(--secondary-hover);
+}
+
+#copy-checkmark {
+  display: none;
+  margin-left: 8px; /* More space */
+  font-size: 1.5em; /* Larger checkmark */
+  color: var(--success);
+  transition: opacity 0.4s ease, transform 0.4s ease; /* Smoother transitions */
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+#copy-btn.copied #copy-checkmark {
+  display: inline;
+  opacity: 1;
+  transform: scale(1.2); /* More aggressive pop */
+  animation: checkmark-pop 0.6s forwards; /* Slower animation */
+}
+
+@keyframes checkmark-pop {
+  0% { opacity: 0; transform: scale(0.6); }
+  60% { opacity: 1; transform: scale(1.3); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+#set-api-key-btn {
+  background: var(--warning);
+  color: var(--text-dark); /* Darker text for warning button */
+  box-shadow: 0 2px 10px var(--warning-light);
+}
+
+#set-api-key-btn:hover {
+  background: var(--warning-light);
+  box-shadow: 0 5px 15px var(--warning);
+}
+
+#delete-api-key-btn {
+  background: var(--danger);
+  box-shadow: 0 2px 10px var(--danger-light);
+}
+
+#delete-api-key-btn:hover {
+  background: var(--danger-light);
+  box-shadow: 0 5px 15px var(--danger);
+}
+
+#output-area {
+  background: var(--background-alt);
+  border: 1px solid var(--border);
+  border-radius: 12px; /* More rounded corners */
+  padding: 20px; /* More padding */
+  white-space: pre-wrap;
+  font-size: 1rem; /* Slightly larger font size */
+  line-height: 1.7; /* Increased line height */
+  color: var(--text-dark);
+  margin-top: 30px; /* More space */
+  position: relative;
+  max-height: 150px;
+  overflow: auto;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  flex-grow: 1;
+  box-shadow: inset 0 0 10px rgba(0, 255, 255, 0.1); /* Inner glow effect */
+}
+
+.output-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  flex-grow: 1;
+}
+
+#output-text {
+  margin: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.95rem; /* Slightly larger font for preformatted text */
+  color: var(--text-dark);
+  flex-grow: 1;
+  text-align: left;
+  padding: 0;
+}
+
+.spinner {
+  border: 4px solid var(--primary-light);
+  border-top: 4px solid var(--primary);
+  border-radius: 50%;
+  width: 28px; /* Larger spinner */
+  height: 28px;
+  animation: spin 0.8s linear infinite; /* Faster spin */
+  display: none;
+}
+
+.spinner.active {
+  display: block;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.confetti-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.status-message {
+  text-align: center;
+  margin-top: 20px; /* More space */
+  padding: 12px 18px; /* More padding */
+  border-radius: 10px; /* More rounded corners */
+  font-size: 0.95rem; /* Slightly larger font */
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(15px); /* More pronounced animation */
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.status-message.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.status-message.success {
+  background-color: var(--success-light);
+  color: var(--success);
+  box-shadow: 0 0 15px rgba(57, 255, 20, 0.3); /* Glow effect */
+}
+
+.status-message.error {
+  background-color: var(--danger-light);
+  color: var(--danger);
+  box-shadow: 0 0 15px rgba(255, 0, 80, 0.3); /* Glow effect */
+}
+
+.popup-footer {
+  padding: 16px 28px; /* More padding */
+  text-align: center;
+  font-size: 0.9rem; /* Slightly larger font size */
+  color: var(--text-light);
+  border-top: 1px solid var(--border);
+  margin-top: auto;
+}
+
+#fun-fact {
+  display: block;
+  padding: 12px 0; /* More padding */
+  min-height: 25px; /* Taller min-height */
+  color: var(--text-medium);
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  margin: -1px !important;
+  padding: 0 !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  border: 0 !important;
+}
+
+@media (max-width: 460px) {
+  .popup-card {
+    width: 95%;
+    max-width: 500px;
+    height: auto;
+    min-height: 480px;
+  }
+
+  main {
+    padding: 18px 22px 0 22px; /* Adjusted padding */
+  }
+
+  .popup-header {
+    padding: 15px 22px 10px 22px; /* Adjusted padding */
+  }
+}
+
+.scrollable-content {
+  flex-grow: 1;
+  overflow-y: auto;
+  padding: 0 28px; /* More horizontal padding */
+  padding-right: 18px; /* Adjust padding for scrollbar */
+}

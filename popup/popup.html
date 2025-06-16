@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Prompt Enhancer</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-bg-gradient"></div>
+
+  <div class="popup-card" id="prompt-view">
+    <header class="popup-header" aria-label="App header">
+      <img src="../icons/logo.png" alt="Prompt Enhancer Logo" class="header-logo">
+      <h1>Prompt Enhancer</h1>
+      <button id="settings-icon" class="settings-icon" aria-label="Open settings"></button>
+    </header>
+    <main>
+      <div class="scrollable-content">
+        <label for="prompt-input" class="visually-hidden">Prompt input</label>
+        <textarea id="prompt-input" placeholder="Enter your prompt here..." aria-label="Prompt input"></textarea>
+
+        <label for="enhancement-type" class="visually-hidden">Enhancement type</label>
+        <select id="enhancement-type" aria-label="Enhancement type">
+          <option value="clarity">Clarity Improvement</option>
+          <option value="context">Context Expansion</option>
+          <option value="professional">Professional Formatting</option>
+          <option value="creative">Creative Enhancement</option>
+        </select>
+        
+        <div class="action-row">
+          <button id="enhance-btn" aria-label="Enhance prompt"><span class="btn-icon">🪄</span> Enhance</button>
+          <button id="copy-btn" aria-label="Copy output"><span class="btn-icon">📋</span> <span id="copy-btn-text">Copy</span><span id="copy-checkmark" class="checkmark" aria-hidden="true">✔️</span></button>
+        </div>
+
+        <div id="output-area" aria-live="polite">
+          <div class="output-content">
+            <span class="spinner" id="spinner" aria-label="Loading" style="display:none;"></span>
+            <pre id="output-text"></pre>
+          </div>
+        </div>
+      </div>
+    </main>
+    <footer class="popup-footer">
+      <span id="fun-fact" aria-live="polite"></span>
+    </footer>
+    <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
+  </div>
+
+  <div class="popup-card" id="settings-view" style="display:none;">
+    <header class="popup-header" aria-label="App settings header">
+      <button id="back-to-home-icon" class="back-icon" aria-label="Back to home"></button>
+      <span class="header-icon" aria-hidden="true">⚙️</span>
+      <h1>API Key Settings</h1>
+    </header>
+    <main>
+      <p class="description">Manage your Groq API Key here.</p>
+      <label for="api-key" class="visually-hidden">Groq API Key</label>
+      <input type="password" id="api-key" placeholder="Enter your Groq API Key..." aria-label="Groq API Key input">
+      <div class="action-row">
+        <button id="save-api-key-btn" aria-label="Save API Key"><span class="btn-icon">💾</span> Save API Key</button>
+        <button id="delete-api-key-btn" aria-label="Delete API Key" class="delete-btn"><span class="btn-icon">🗑️</span> Delete Key</button>
+      </div>
+      <div id="status" class="status-message" aria-live="polite"></div>
+    </main>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html> 
