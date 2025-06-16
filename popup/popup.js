@@ -171,7 +171,7 @@ enhanceBtn.addEventListener('click', async () => {
       if (response.error) {
         outputText.textContent = response.error;
       } else {
-        outputText.textContent = response.enhancedPrompt || 'No response.';
+        outputText.textContent = (response.enhancedPrompt || 'No response.').trim();
         launchConfetti();
         showRandomFunFact();
       }
@@ -219,4 +219,38 @@ deleteApiKeyBtn.addEventListener('click', () => {
     statusDiv.classList.add('success');
     setTimeout(() => statusDiv.textContent = '', 2000);
   });
-}); 
+});
+
+const themeToggle = document.getElementById('theme-toggle');
+
+function setTheme(theme) {
+  if (theme === 'dark') {
+    document.body.classList.add('dark-theme');
+    if (themeToggle) themeToggle.textContent = '☀️';
+  } else {
+    document.body.classList.remove('dark-theme');
+    if (themeToggle) themeToggle.textContent = '🌙';
+  }
+}
+
+function saveTheme(theme) {
+  chrome.storage.sync.set({ promptEnhancerTheme: theme });
+}
+
+function loadTheme() {
+  chrome.storage.sync.get(['promptEnhancerTheme'], (result) => {
+    const theme = result.promptEnhancerTheme || 'dark';
+    setTheme(theme);
+  });
+}
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    const isDark = document.body.classList.contains('dark-theme');
+    const newTheme = isDark ? 'light' : 'dark';
+    setTheme(newTheme);
+    saveTheme(newTheme);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', loadTheme); 
