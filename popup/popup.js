@@ -150,6 +150,7 @@ historyIcon.addEventListener('click', () => {
   promptView.style.display = 'none';
   settingsView.style.display = 'none';
   historyView.style.display = 'flex';
+  renderHistoryList();
 });
 
 backToHomeFromHistory.addEventListener('click', () => {
@@ -191,6 +192,7 @@ enhanceBtn.addEventListener('click', async () => {
       } else {
         lastEnhancedPrompt = (response.enhancedPrompt || 'No response.').trim();
         outputText.textContent = lastEnhancedPrompt;
+        savePromptHistory(lastOriginalPrompt, lastEnhancedPrompt);
         launchConfetti();
         showRandomFunFact();
       }
@@ -240,39 +242,53 @@ deleteApiKeyBtn.addEventListener('click', () => {
   });
 });
 
-const themeToggle = document.getElementById('theme-toggle');
-
-function setTheme(theme) {
-  if (theme === 'dark') {
-    document.body.classList.add('dark-theme');
-    if (themeToggle) themeToggle.textContent = '☀️';
-  } else {
-    document.body.classList.remove('dark-theme');
-    if (themeToggle) themeToggle.textContent = '🌙';
-  }
-}
-
-function saveTheme(theme) {
-  chrome.storage.sync.set({ promptEnhancerTheme: theme });
-}
-
-function loadTheme() {
-  chrome.storage.sync.get(['promptEnhancerTheme'], (result) => {
-    const theme = result.promptEnhancerTheme || 'dark';
-    setTheme(theme);
+// --- Prompt History Storage ---
+function savePromptHistory(original, enhanced) {
+  const entry = {
+    original,
+    enhanced,
+    time: Date.now()
+  };
+  chrome.storage.local.get(['promptHistory'], (result) => {
+    const history = Array.isArray(result.promptHistory) ? result.promptHistory : [];
+    history.unshift(entry); // newest first
+    // Limit history to 50 entries
+    if (history.length > 50) history.length = 50;
+    chrome.storage.local.set({ promptHistory: history });
   });
 }
 
-if (themeToggle) {
-  themeToggle.addEventListener('click', () => {
-    const isDark = document.body.classList.contains('dark-theme');
-    const newTheme = isDark ? 'light' : 'dark';
-    setTheme(newTheme);
-    saveTheme(newTheme);
-  });
+function formatTime(ts) {
+  const d = new Date(ts);
+  return d.toLocaleString();
 }
 
-document.addEventListener('DOMContentLoaded', loadTheme);
+function renderHistoryList() {
+  const historyList = document.getElementById('history-list');
+  historyList.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-light);">Loading...</div>';
+  chrome.storage.local.get(['promptHistory'], (result) => {
+    const history = Array.isArray(result.promptHistory) ? result.promptHistory : [];
+    if (!history.length) {
+      historyList.innerHTML = '<div style="padding:16px;text-align:center;color:var(--text-light);">No history yet.</div>';
+      return;
+    }
+    historyList.innerHTML = history.map(entry => `
+      <div class="history-entry" style="border-bottom:1px solid var(--border);padding:12px 0;">
+        <div style="font-size:0.93em;color:var(--text-light);margin-bottom:4px;">${formatTime(entry.time)}</div>
+        <div style="display:flex;gap:10px;">
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:600;font-size:0.97em;">Original</div>
+            <div style="white-space:pre-wrap;overflow:hidden;text-overflow:ellipsis;max-height:3.5em;line-height:1.2;font-size:0.97em;">${entry.original.slice(0, 180)}</div>
+          </div>
+          <div style="flex:1;min-width:0;">
+            <div style="font-weight:600;font-size:0.97em;">Enhanced</div>
+            <div style="white-space:pre-wrap;overflow:hidden;text-overflow:ellipsis;max-height:3.5em;line-height:1.2;font-size:0.97em;">${entry.enhanced.slice(0, 180)}</div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  });
+}
 
 // --- Compare Modal Logic ---
 const compareBtn = document.getElementById('compare-btn');
@@ -324,4 +340,9 @@ compareModal.addEventListener('click', (e) => {
   if (e.target === compareModal || e.target.classList.contains('compare-modal-overlay')) {
     compareModal.style.display = 'none';
   }
-}); 
+});
+
+// Always use dark theme
+if (!document.body.classList.contains('dark-theme')) {
+  document.body.classList.add('dark-theme');
+} 
