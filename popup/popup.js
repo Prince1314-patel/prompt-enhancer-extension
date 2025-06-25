@@ -252,8 +252,8 @@ function savePromptHistory(original, enhanced) {
   chrome.storage.local.get(['promptHistory'], (result) => {
     const history = Array.isArray(result.promptHistory) ? result.promptHistory : [];
     history.unshift(entry); // newest first
-    // Limit history to 50 entries
-    if (history.length > 50) history.length = 50;
+    // Limit history to 10 entries
+    if (history.length > 10) history.length = 10;
     chrome.storage.local.set({ promptHistory: history });
   });
 }
@@ -369,4 +369,4 @@ compareModal.addEventListener('click', (e) => {
 // Always use dark theme
 if (!document.body.classList.contains('dark-theme')) {
   document.body.classList.add('dark-theme');
-} 
+}
