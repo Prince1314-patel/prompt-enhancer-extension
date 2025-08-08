@@ -233,7 +233,7 @@ const confettiCanvas = document.getElementById('confetti-canvas');
 // Quantum Loading Elements
 const loadingContainer = document.getElementById('loading-container');
 const loadingStep = document.getElementById('loading-step');
-const progressFill = document.getElementById('progress-fill');
+const quantumProgressFill = document.getElementById('progress-fill');
 const progressText = document.getElementById('progress-text');
 const step1 = document.getElementById('step-1');
 const step2 = document.getElementById('step-2');
@@ -311,7 +311,7 @@ function showQuantumLoading(show) {
   if (show) {
     // Reset quantum loading state
     currentStep = 0;
-    progressFill.style.strokeDashoffset = '283';
+    quantumProgressFill.style.strokeDashoffset = '283';
     progressText.textContent = '0%';
     outputText.textContent = '';
     
@@ -347,7 +347,7 @@ function startQuantumAnimation() {
     // Update quantum progress ring
     totalProgress = Math.min((elapsedTime / totalDuration) * 100, 100);
     const strokeOffset = 283 - (totalProgress / 100) * 283;
-    progressFill.style.strokeDashoffset = strokeOffset;
+    quantumProgressFill.style.strokeDashoffset = strokeOffset;
     progressText.textContent = `${Math.round(totalProgress)}%`;
     
     // Update current quantum step
@@ -431,9 +431,9 @@ function launchQuantumConfetti() {
         ctx.fill();
       } else {
         // Regular confetti
-        ctx.ellipse(c.x, c.y, c.r, c.r/2, c.tilt, 0, 2 * Math.PI);
-        ctx.fillStyle = c.color;
-        ctx.fill();
+      ctx.ellipse(c.x, c.y, c.r, c.r/2, c.tilt, 0, 2 * Math.PI);
+      ctx.fillStyle = c.color;
+      ctx.fill();
       }
     }
     update();
@@ -530,7 +530,12 @@ enhanceBtn.addEventListener('click', async () => {
     showQuantumLoading(true);
     // Store the original prompt for comparison
     lastOriginalPrompt = prompt;
-    chrome.runtime.sendMessage({ action: 'enhance', prompt, type }, (response) => {
+    chrome.runtime.sendMessage({ 
+      action: 'enhance', 
+      prompt, 
+      type,
+      template: selectedTemplate // Send template info to background
+    }, (response) => {
       enhanceBtn.disabled = false;
       showQuantumLoading(false);
       if (response.error) {
@@ -945,6 +950,171 @@ enhanceBtn.addEventListener('click', () => {
   }, 1000);
 });
 
+// === QUICK ACTION TEMPLATES ===
+
+// Template definitions with structured prompts
+const TEMPLATES = {
+  'blog-post': {
+    title: 'Blog Post',
+    icon: '📝',
+    prompt: `You are a professional content writer. Write a comprehensive blog post about [TOPIC]. 
+
+Requirements:
+- Target audience: [AUDIENCE]
+- Tone: [TONE - informative, conversational, professional]
+- Length: [LENGTH - short, medium, long]
+- Include: [SPECIFIC ELEMENTS - examples, statistics, tips]
+
+Please create engaging content that provides value to readers.`,
+    placeholder: 'Enter your blog topic, target audience, tone, and specific requirements...'
+  },
+  'code-review': {
+    title: 'Code Review',
+    icon: '🔍',
+    prompt: `You are a senior software engineer conducting a code review. Review the following code:
+
+[CODE TO REVIEW]
+
+Please analyze:
+- Code quality and best practices
+- Performance considerations
+- Security vulnerabilities
+- Readability and maintainability
+- Suggestions for improvement
+
+Provide constructive feedback with specific examples.`,
+    placeholder: 'Paste your code here for review...'
+  },
+  'email-draft': {
+    title: 'Email Draft',
+    icon: '📧',
+    prompt: `You are a professional communication expert. Draft an email about [SUBJECT].
+
+Context:
+- Recipient: [RECIPIENT]
+- Purpose: [PURPOSE]
+- Tone: [TONE - formal, friendly, urgent]
+- Key points to include: [KEY POINTS]
+
+Create a clear, professional email that achieves the intended goal.`,
+    placeholder: 'Describe the email subject, recipient, purpose, and key points...'
+  },
+  'social-media': {
+    title: 'Social Media',
+    icon: '📱',
+    prompt: `You are a social media expert. Create engaging content for [PLATFORM].
+
+Content type: [TYPE - post, story, tweet, carousel]
+Topic: [TOPIC]
+Target audience: [AUDIENCE]
+Call-to-action: [CTA]
+
+Make it engaging, shareable, and aligned with platform best practices.`,
+    placeholder: 'Specify platform, content type, topic, and target audience...'
+  },
+  'meeting-agenda': {
+    title: 'Meeting Agenda',
+    icon: '📅',
+    prompt: `You are a project manager. Create a structured meeting agenda for [MEETING TYPE].
+
+Meeting details:
+- Duration: [DURATION]
+- Participants: [PARTICIPANTS]
+- Main objectives: [OBJECTIVES]
+- Key discussion points: [DISCUSSION POINTS]
+
+Organize the agenda for maximum productivity and clear outcomes.`,
+    placeholder: 'Describe meeting type, duration, participants, and objectives...'
+  },
+  'product-description': {
+    title: 'Product Description',
+    icon: '🛍️',
+    prompt: `You are a marketing copywriter. Write compelling product descriptions for [PRODUCT].
+
+Product details:
+- Target market: [TARGET MARKET]
+- Key features: [FEATURES]
+- Benefits: [BENEFITS]
+- Tone: [TONE - professional, casual, luxury]
+
+Create persuasive copy that converts browsers into buyers.`,
+    placeholder: 'Describe your product, target market, features, and benefits...'
+  }
+};
+
+// Current selected template
+let selectedTemplate = null;
+
+/**
+ * Applies a template to the prompt input
+ * @param {string} templateKey - The template key to apply
+ */
+function applyTemplate(templateKey) {
+  const template = TEMPLATES[templateKey];
+  if (!template) return;
+
+  // Update selected template visual state
+  document.querySelectorAll('.template-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  
+  const selectedBtn = document.querySelector(`[data-template="${templateKey}"]`);
+  if (selectedBtn) {
+    selectedBtn.classList.add('selected');
+  }
+
+  // Apply template to textarea
+  promptInput.value = template.prompt;
+  promptInput.placeholder = template.placeholder;
+  
+  // Update character counter
+  updateCharacterCounter(template.prompt);
+  
+  // Trigger auto-resize
+  promptInput.style.height = 'auto';
+  promptInput.style.height = Math.min(promptInput.scrollHeight, 200) + 'px';
+  
+  // Add quantum effect
+  promptInput.style.animation = 'pulse 0.3s ease-in-out';
+  setTimeout(() => {
+    promptInput.style.animation = '';
+  }, 300);
+  
+  selectedTemplate = templateKey;
+  
+  console.log(`🚀 Applied template: ${template.title}`);
+}
+
+/**
+ * Clears the selected template
+ */
+function clearTemplate() {
+  selectedTemplate = null;
+  document.querySelectorAll('.template-btn').forEach(btn => {
+    btn.classList.remove('selected');
+  });
+  promptInput.placeholder = 'Enter your neural prompt...';
+}
+
+// === TEMPLATE EVENT LISTENERS ===
+
+// Add click handlers to template buttons
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.template-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const templateKey = btn.getAttribute('data-template');
+      applyTemplate(templateKey);
+    });
+  });
+});
+
+// Clear template when user manually types
+promptInput.addEventListener('input', () => {
+  if (selectedTemplate) {
+    clearTemplate();
+  }
+});
+
 // === RESTORE AUTO-SAVED PROMPT ON LOAD ===
 document.addEventListener('DOMContentLoaded', () => {
   // Restore auto-saved prompt after a short delay to ensure UI is ready
@@ -958,3 +1128,4 @@ console.log('🧠 Neural Interface initialized successfully!');
 console.log('⚡ Quantum particles are flowing...');
 console.log('🎨 Glassmorphism effects are active...');
 console.log('📊 Character counter and auto-save functionality active...');
+console.log('🚀 Quick action templates loaded...');

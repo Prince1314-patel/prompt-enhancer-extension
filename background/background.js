@@ -22,9 +22,23 @@ When enhancing the prompt, consider the following key principles:
 - Output Format: Request a specific structure, such as "in bullet points," "as a table," or "in JSON." Define length or constraints if needed (e.g., "in 50 words or less").
 - Tone and Style: Specify the tone (e.g., "professional," "friendly," "concise"). Match the style to the task or recipient.
 - Reasoning and Structure: For complex tasks, add phrases like "Think step by step" or "Explain your reasoning." For multi-step tasks, split them into smaller prompts or request a structured process.
+- Template Integration: If the user has selected a template, enhance it by filling in the placeholders with specific, actionable content while maintaining the structured format.
 NOTE:- Do not try to answer the user's prompt or provide any additional information beyond the enhanced prompt.Also if the user's prompt include asking for a example code snippet than do not provide any code snippet.Just enhance the prompt.
 
 `;
+
+        // Add template-specific instructions if a template is selected
+        if (message.template) {
+          systemPrompt += `
+IMPORTANT: The user has selected a template (${message.template}). Your task is to enhance this template by:
+1. Filling in the placeholder brackets [PLACEHOLDER] with specific, actionable content
+2. Maintaining the structured format and professional tone
+3. Adding specific details, examples, and context where appropriate
+4. Making the prompt more specific and actionable while keeping the original structure
+5. Ensuring the enhanced prompt is ready for immediate use with AI models
+
+Enhance the template while preserving its professional structure and making it more specific and actionable.`;
+        }
 
         switch (message.type) {
           case 'clarity':
