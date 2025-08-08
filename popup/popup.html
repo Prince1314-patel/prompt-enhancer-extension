@@ -62,6 +62,18 @@
           <div class="input-container">
             <textarea id="prompt-input" placeholder="Enter your neural prompt..." aria-label="Prompt input"></textarea>
             <div class="input-border-glow"></div>
+            <div class="character-counter">
+              <div class="counter-display">
+                <span id="char-count" class="char-count">0</span>
+                <span class="counter-separator">/</span>
+                <span class="char-limit">2000</span>
+              </div>
+                          <div class="counter-progress">
+              <div class="progress-bar">
+                <div id="char-progress-fill" class="progress-fill"></div>
+              </div>
+            </div>
+            </div>
           </div>
         </div>
       </div>

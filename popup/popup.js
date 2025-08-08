@@ -837,7 +837,124 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
+// === CHARACTER COUNTER AND AUTO-SAVE FUNCTIONALITY ===
+
+// Constants for character limits
+const CHAR_LIMIT = 2000;
+const WARNING_THRESHOLD = 0.8; // 80% of limit
+const DANGER_THRESHOLD = 0.95; // 95% of limit
+
+// Auto-save debounce timer
+let autoSaveTimer = null;
+const AUTO_SAVE_DELAY = 2000; // 2 seconds
+
+// Character counter elements
+const charCount = document.getElementById('char-count');
+const charProgressFill = document.getElementById('char-progress-fill');
+const characterCounter = document.querySelector('.character-counter');
+
+/**
+ * Updates the character counter display and progress bar
+ * @param {string} text - The input text to count
+ */
+function updateCharacterCounter(text) {
+  const count = text.length;
+  const percentage = (count / CHAR_LIMIT) * 100;
+  
+  // Update character count display
+  charCount.textContent = count;
+  
+  // Update progress bar
+  charProgressFill.style.width = `${percentage}%`;
+  
+  // Update visual states based on thresholds
+  if (count >= CHAR_LIMIT * DANGER_THRESHOLD) {
+    // Danger state - approaching limit
+    characterCounter.className = 'character-counter danger';
+    charCount.className = 'char-count danger';
+    charProgressFill.className = 'progress-fill danger';
+  } else if (count >= CHAR_LIMIT * WARNING_THRESHOLD) {
+    // Warning state - getting close
+    characterCounter.className = 'character-counter warning';
+    charCount.className = 'char-count warning';
+    charProgressFill.className = 'progress-fill warning';
+  } else {
+    // Normal state
+    characterCounter.className = 'character-counter';
+    charCount.className = 'char-count';
+    charProgressFill.className = 'progress-fill';
+  }
+}
+
+/**
+ * Auto-saves the current prompt to local storage
+ * @param {string} prompt - The prompt text to save
+ */
+function autoSavePrompt(prompt) {
+  if (prompt.trim()) {
+    chrome.storage.local.set({ 'autoSavedPrompt': prompt }, () => {
+      console.log('💾 Auto-saved prompt to neural storage');
+    });
+  }
+}
+
+/**
+ * Restores the last auto-saved prompt from local storage
+ */
+function restoreAutoSavedPrompt() {
+  chrome.storage.local.get(['autoSavedPrompt'], (result) => {
+    if (result.autoSavedPrompt && result.autoSavedPrompt.trim()) {
+      promptInput.value = result.autoSavedPrompt;
+      updateCharacterCounter(result.autoSavedPrompt);
+      console.log('🔄 Restored auto-saved prompt from neural storage');
+    }
+  });
+}
+
+/**
+ * Clears the auto-saved prompt from storage
+ */
+function clearAutoSavedPrompt() {
+  chrome.storage.local.remove(['autoSavedPrompt'], () => {
+    console.log('🗑️ Cleared auto-saved prompt from neural storage');
+  });
+}
+
+// === CHARACTER COUNTER EVENT LISTENERS ===
+
+// Update counter on input
+promptInput.addEventListener('input', (e) => {
+  const text = e.target.value;
+  updateCharacterCounter(text);
+  
+  // Auto-save with debouncing
+  if (autoSaveTimer) {
+    clearTimeout(autoSaveTimer);
+  }
+  
+  autoSaveTimer = setTimeout(() => {
+    autoSavePrompt(text);
+  }, AUTO_SAVE_DELAY);
+});
+
+// Clear auto-save when prompt is successfully enhanced
+enhanceBtn.addEventListener('click', () => {
+  // Clear auto-save after successful enhancement
+  setTimeout(() => {
+    clearAutoSavedPrompt();
+  }, 1000);
+});
+
+// === RESTORE AUTO-SAVED PROMPT ON LOAD ===
+document.addEventListener('DOMContentLoaded', () => {
+  // Restore auto-saved prompt after a short delay to ensure UI is ready
+  setTimeout(() => {
+    restoreAutoSavedPrompt();
+  }, 500);
+});
+
 // === Neural Interface Ready ===
 console.log('🧠 Neural Interface initialized successfully!');
 console.log('⚡ Quantum particles are flowing...');
 console.log('🎨 Glassmorphism effects are active...');
+console.log('📊 Character counter and auto-save functionality active...');
