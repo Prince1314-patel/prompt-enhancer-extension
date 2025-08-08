@@ -7,6 +7,10 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         sendResponse({ enhancedPrompt: '', error: 'API key not set. Please set it in the options.' });
         return;
       }
+      
+      // Add a small delay to make the loading animation more realistic
+      await new Promise(resolve => setTimeout(resolve, 500));
+      
       try {
         // Prepare the prompt for enhancement type
         let systemPrompt = `You are a Prompt Engineering Assistant. Your goal is to enhance the user's provided prompt by applying prompt engineering best practices. Your response must ONLY be the enhanced prompt. Do NOT answer the user's prompt or provide any additional information beyond the enhanced prompt.

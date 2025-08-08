@@ -3,17 +3,160 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prompt Enhancer Options</title>
+  <title>Neural Settings - Prompt Enhancer</title>
   <link rel="stylesheet" href="options.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="container">
-    <h1>Settings</h1>
-    <label for="api-key">Groq API Key:</label>
-    <input type="password" id="api-key" placeholder="Enter your Groq API key">
-    <button id="save-btn">Save</button>
-    <div id="status"></div>
+  <!-- Neural Background -->
+  <div class="neural-bg"></div>
+  
+  <!-- Quantum Particles -->
+  <div class="particle-system"></div>
+  
+  <!-- Main Container -->
+  <div class="neural-container">
+    <!-- Holographic Header -->
+    <header class="holographic-header">
+      <div class="header-glow"></div>
+      <div class="logo-container">
+        <div class="neural-logo">
+          <svg viewBox="0 0 40 40" class="logo-svg">
+            <circle cx="20" cy="20" r="18" class="logo-ring"/>
+            <circle cx="20" cy="20" r="12" class="logo-core"/>
+            <circle cx="20" cy="20" r="6" class="logo-center"/>
+            <line x1="8" y1="8" x2="32" y2="32" class="logo-connection"/>
+            <line x1="32" y1="8" x2="8" y2="32" class="logo-connection"/>
+          </svg>
+        </div>
+        <h1 class="app-title">Neural Settings</h1>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="neural-main">
+      <div class="glass-panel settings-panel">
+        <div class="panel-glow"></div>
+        <div class="panel-content">
+          <div class="settings-header">
+            <h2 class="settings-title">Neural Configuration</h2>
+            <p class="settings-description">Configure your quantum API connection for enhanced neural processing</p>
+          </div>
+
+          <div class="settings-section">
+            <label for="api-key" class="neural-label">
+              <span class="label-icon">🔑</span>
+              Groq API Key
+            </label>
+            <div class="input-container">
+              <input type="password" id="api-key" placeholder="Enter your Groq API key..." aria-label="Groq API Key input">
+              <div class="input-border-glow"></div>
+            </div>
+            <p class="input-help">Your API key is encrypted and stored securely in your neural vault</p>
+          </div>
+
+          <div class="settings-actions">
+            <button id="save-btn" class="quantum-btn save-btn">
+              <div class="btn-particles"></div>
+              <div class="btn-glow"></div>
+              <span class="btn-icon">💾</span>
+              <span class="btn-text">Save Neural Key</span>
+            </button>
+            
+            <button id="test-btn" class="quantum-btn test-btn">
+              <div class="btn-particles"></div>
+              <div class="btn-glow"></div>
+              <span class="btn-icon">🧪</span>
+              <span class="btn-text">Test Connection</span>
+            </button>
+          </div>
+
+          <div id="status" class="status-message" aria-live="polite"></div>
+        </div>
+      </div>
+
+      <!-- Advanced Settings Panel -->
+      <div class="glass-panel advanced-panel">
+        <div class="panel-glow"></div>
+        <div class="panel-content">
+          <h3 class="panel-title">Advanced Neural Settings</h3>
+          
+          <div class="setting-group">
+            <label class="neural-label">
+              <span class="label-icon">⚡</span>
+              Processing Mode
+            </label>
+            <select id="processing-mode" class="neural-select">
+              <option value="standard">Standard Neural Processing</option>
+              <option value="enhanced">Enhanced Quantum Processing</option>
+              <option value="ultra">Ultra-Precision Mode</option>
+            </select>
+          </div>
+
+          <div class="setting-group">
+            <label class="neural-label">
+              <span class="label-icon">🎨</span>
+              Interface Theme
+            </label>
+            <select id="interface-theme" class="neural-select">
+              <option value="neural">Neural Dark</option>
+              <option value="quantum">Quantum Light</option>
+              <option value="holographic">Holographic</option>
+            </select>
+          </div>
+
+          <div class="setting-group">
+            <label class="neural-label">
+              <span class="label-icon">🔧</span>
+              Auto-Enhancement
+            </label>
+            <div class="toggle-container">
+              <input type="checkbox" id="auto-enhance" class="neural-toggle">
+              <label for="auto-enhance" class="toggle-label"></label>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Information Panel -->
+      <div class="glass-panel info-panel">
+        <div class="panel-glow"></div>
+        <div class="panel-content">
+          <h3 class="panel-title">Neural Information</h3>
+          <div class="info-grid">
+            <div class="info-item">
+              <span class="info-icon">🧠</span>
+              <div class="info-content">
+                <h4>Neural Processing</h4>
+                <p>Advanced AI models process your prompts with neural precision</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">🔒</span>
+              <div class="info-content">
+                <h4>Secure Storage</h4>
+                <p>Your API keys are encrypted and stored locally</p>
+              </div>
+            </div>
+            <div class="info-item">
+              <span class="info-icon">⚡</span>
+              <div class="info-content">
+                <h4>Quantum Speed</h4>
+                <p>Lightning-fast processing with quantum algorithms</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Holographic Footer -->
+    <footer class="holographic-footer">
+      <div class="footer-glow"></div>
+      <p class="footer-text">Neural Prompt Enhancer v2.0 - Quantum Edition</p>
+    </footer>
   </div>
+
   <script src="options.js"></script>
 </body>
 </html> 

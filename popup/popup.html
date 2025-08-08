@@ -3,103 +3,269 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Prompt Enhancer</title>
+  <title>Neural Prompt Enhancer</title>
   <link rel="stylesheet" href="popup.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 <body>
-  <div class="popup-card" id="prompt-view">
-    <header class="popup-header" aria-label="App header">
-      <img src="../icons/logo.png" alt="Prompt Enhancer Logo" class="header-logo">
-      <h1>Prompt Enhancer</h1>
-      <button id="history-icon" class="history-icon" aria-label="View history">
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"></polyline><path d="M3.51 15a9 9 0 1 0-2.13-9.36"></path></svg>
-      </button>
-      <button id="settings-icon" class="settings-icon" aria-label="Open settings">
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 5 15.4a1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 8a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 16 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 8c.14.31.22.65.22 1v.09A1.65 1.65 0 0 0 21 12c0 .35-.08.69-.22 1z"/></svg>
-      </button>
-    </header>
-    <main>
-      <div class="scrollable-content">
-        <label for="prompt-input" class="visually-hidden">Prompt input</label>
-        <textarea id="prompt-input" placeholder="Enter your prompt here..." aria-label="Prompt input"></textarea>
-
-        <label for="enhancement-type" class="visually-hidden">Enhancement type</label>
-        <select id="enhancement-type" aria-label="Enhancement type">
-          <option value="clarity">Clarity Improvement</option>
-          <option value="context">Context Expansion</option>
-          <option value="professional">Professional Formatting</option>
-          <option value="creative">Creative Enhancement</option>
-        </select>
-        
-        <div class="action-row">
-          <button id="enhance-btn" aria-label="Enhance prompt"><span class="btn-icon">🪄</span> Enhance</button>
-          <button id="copy-btn" aria-label="Copy output"><span class="btn-icon">📋</span> <span id="copy-btn-text">Copy</span><span id="copy-checkmark" class="checkmark" aria-hidden="true">✔️</span></button>
+  <!-- Neural Network Background Canvas -->
+  <canvas id="neural-canvas" class="neural-background"></canvas>
+  
+  <!-- Quantum Particle System -->
+  <div id="particle-system" class="particle-system"></div>
+  
+  <!-- Main Interface Container -->
+  <div class="neural-interface" id="prompt-view">
+    <!-- Holographic Header -->
+    <header class="holographic-header">
+      <div class="header-glow"></div>
+      <div class="logo-container">
+        <div class="neural-logo">
+          <svg viewBox="0 0 40 40" class="logo-svg">
+            <circle cx="20" cy="20" r="18" class="logo-ring"/>
+            <circle cx="20" cy="20" r="12" class="logo-core"/>
+            <circle cx="20" cy="20" r="6" class="logo-center"/>
+            <line x1="8" y1="8" x2="32" y2="32" class="logo-connection"/>
+            <line x1="32" y1="8" x2="8" y2="32" class="logo-connection"/>
+          </svg>
         </div>
+        <h1 class="app-title">Neural Enhancer</h1>
+      </div>
+      
+      <div class="header-controls">
+        <button id="history-icon" class="holographic-btn" aria-label="View history">
+          <div class="btn-glow"></div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="1 4 1 10 7 10"></polyline>
+            <path d="M3.51 15a9 9 0 1 0-2.13-9.36"></path>
+          </svg>
+        </button>
+        <button id="settings-icon" class="holographic-btn" aria-label="Open settings">
+          <div class="btn-glow"></div>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3"/>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 8 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1.51-1H3a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 8a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 8 4.6a1.65 1.65 0 0 0 1-1.51V3a2 2 0 1 1 4 0v.09A1.65 1.65 0 0 0 16 4.6a1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0 1.82.33c.14.31.22.65.22 1v.09A1.65 1.65 0 0 0 21 12c0 .35-.08.69-.22 1z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
 
-        <div id="output-area" aria-live="polite">
-          <div class="output-content">
-            <span class="spinner" id="spinner" aria-label="Loading" style="display:none;"></span>
-            <pre id="output-text"></pre>
+    <!-- Main Content Area -->
+    <main class="neural-main">
+      <div class="glass-panel input-panel">
+        <div class="panel-glow"></div>
+        <div class="panel-content">
+          <label for="prompt-input" class="neural-label">
+            <span class="label-icon">🧠</span>
+            Neural Input
+          </label>
+          <div class="input-container">
+            <textarea id="prompt-input" placeholder="Enter your neural prompt..." aria-label="Prompt input"></textarea>
+            <div class="input-border-glow"></div>
           </div>
         </div>
-        <button id="compare-btn" aria-label="Compare original and enhanced prompt" style="margin-top:8px;">Compare</button>
       </div>
-    </main>
-    <footer class="popup-footer">
-      <span id="fun-fact" aria-live="polite"></span>
-    </footer>
-    <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
-  </div>
 
-  <div class="popup-card" id="settings-view" style="display:none;">
-    <header class="popup-header" aria-label="App settings header">
-      <button id="back-to-home-icon" class="back-icon" aria-label="Back to home">
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+      <div class="glass-panel enhancement-panel">
+        <div class="panel-glow"></div>
+        <div class="panel-content">
+          <label for="enhancement-type" class="neural-label">
+            <span class="label-icon">⚡</span>
+            Enhancement Mode
+          </label>
+          <div class="enhancement-selector">
+            <select id="enhancement-type" aria-label="Enhancement type">
+              <option value="clarity">🧠 Neural Clarity</option>
+              <option value="context">🌐 Context Expansion</option>
+              <option value="professional">💼 Professional Format</option>
+              <option value="creative">🎨 Creative Enhancement</option>
+            </select>
+            <div class="select-glow"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="action-panel">
+        <button id="enhance-btn" class="quantum-btn enhance-btn" aria-label="Enhance prompt">
+          <div class="btn-particles"></div>
+          <div class="btn-glow"></div>
+          <span class="btn-icon">🪄</span>
+          <span class="btn-text">Quantum Enhance</span>
+        </button>
+        
+        <button id="copy-btn" class="quantum-btn copy-btn" aria-label="Copy output">
+          <div class="btn-particles"></div>
+          <div class="btn-glow"></div>
+          <span class="btn-icon">📋</span>
+          <span class="btn-text" id="copy-btn-text">Copy</span>
+          <span id="copy-checkmark" class="checkmark" aria-hidden="true">✔️</span>
+        </button>
+      </div>
+
+      <!-- Quantum Output Area -->
+      <div class="glass-panel output-panel">
+        <div class="panel-glow"></div>
+        <div class="panel-content">
+          <div id="output-area" aria-live="polite">
+            <!-- Quantum Loading States -->
+            <div id="loading-container" class="quantum-loading" style="display:none;">
+              <div class="quantum-spinner">
+                <div class="spinner-ring"></div>
+                <div class="spinner-core"></div>
+                <div class="spinner-particles"></div>
+              </div>
+              
+              <div class="loading-content">
+                <div class="loading-title">Quantum Processing...</div>
+                <div class="loading-subtitle" id="loading-step">Initializing neural pathways</div>
+                
+                <div class="quantum-progress">
+                  <div class="progress-ring">
+                    <svg viewBox="0 0 100 100">
+                      <circle cx="50" cy="50" r="45" class="progress-bg"/>
+                      <circle cx="50" cy="50" r="45" class="progress-fill" id="progress-fill"/>
+                    </svg>
+                    <div class="progress-text" id="progress-text">0%</div>
+                  </div>
+                </div>
+                
+                <div class="quantum-steps">
+                  <div class="step" id="step-1">
+                    <div class="step-glow"></div>
+                    <div class="step-icon">1</div>
+                    <div class="step-text">Analyzing</div>
+                  </div>
+                  <div class="step" id="step-2">
+                    <div class="step-glow"></div>
+                    <div class="step-icon">2</div>
+                    <div class="step-text">Enhancing</div>
+                  </div>
+                  <div class="step" id="step-3">
+                    <div class="step-glow"></div>
+                    <div class="step-icon">3</div>
+                    <div class="step-text">Optimizing</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <pre id="output-text" class="neural-output"></pre>
+          </div>
+        </div>
+      </div>
+
+      <button id="compare-btn" class="quantum-btn compare-btn" aria-label="Compare original and enhanced prompt">
+        <div class="btn-particles"></div>
+        <div class="btn-glow"></div>
+        <span class="btn-icon">🔍</span>
+        <span class="btn-text">Neural Compare</span>
       </button>
-      <h1>API Key Settings</h1>
+    </main>
+
+    <!-- Holographic Footer -->
+    <footer class="holographic-footer">
+      <div class="footer-glow"></div>
+      <span id="fun-fact" class="neural-fact" aria-live="polite"></span>
+    </footer>
+  </div>
+
+  <!-- Settings Interface -->
+  <div class="neural-interface" id="settings-view" style="display:none;">
+    <header class="holographic-header">
+      <div class="header-glow"></div>
+      <button id="back-to-home-icon" class="holographic-btn back-btn" aria-label="Back to home">
+        <div class="btn-glow"></div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <h1 class="app-title">Neural Settings</h1>
     </header>
-    <main>
-      <p class="description">Manage your Groq API Key here.</p>
-      <label for="api-key" class="visually-hidden">Groq API Key</label>
-      <input type="password" id="api-key" placeholder="Enter your Groq API Key..." aria-label="Groq API Key input">
-      <div class="action-row">
-        <button id="save-api-key-btn" aria-label="Save API Key"><span class="btn-icon">💾</span> Save API Key</button>
-        <button id="delete-api-key-btn" aria-label="Delete API Key" class="delete-btn"><span class="btn-icon">🗑️</span> Delete Key</button>
+    
+    <main class="neural-main">
+      <div class="glass-panel settings-panel">
+        <div class="panel-glow"></div>
+        <div class="panel-content">
+          <p class="settings-description">Configure your neural API connection</p>
+          <label for="api-key" class="neural-label">
+            <span class="label-icon">🔑</span>
+            Groq API Key
+          </label>
+          <div class="input-container">
+            <input type="password" id="api-key" placeholder="Enter your Groq API Key..." aria-label="Groq API Key input">
+            <div class="input-border-glow"></div>
+          </div>
+          
+          <div class="settings-actions">
+            <button id="save-api-key-btn" class="quantum-btn save-btn" aria-label="Save API Key">
+              <div class="btn-particles"></div>
+              <div class="btn-glow"></div>
+              <span class="btn-icon">💾</span>
+              <span class="btn-text">Save Key</span>
+            </button>
+            
+            <button id="delete-api-key-btn" class="quantum-btn delete-btn" aria-label="Delete API Key">
+              <div class="btn-particles"></div>
+              <div class="btn-glow"></div>
+              <span class="btn-icon">🗑️</span>
+              <span class="btn-text">Delete Key</span>
+            </button>
+          </div>
+          
+          <div id="status" class="status-message" aria-live="polite"></div>
+        </div>
       </div>
-      <div id="status" class="status-message" aria-live="polite"></div>
     </main>
   </div>
 
-  <!-- Modal for compare -->
-  <div id="compare-modal" class="compare-modal" aria-modal="true" role="dialog" style="display:none;">
-    <div class="compare-modal-overlay"></div>
-    <div class="compare-modal-content">
-      <button id="close-compare-modal" aria-label="Close compare modal">&times;</button>
+  <!-- History Interface -->
+  <div class="neural-interface" id="history-view" style="display:none;">
+    <header class="holographic-header">
+      <div class="header-glow"></div>
+      <button id="back-to-home-from-history" class="holographic-btn back-btn" aria-label="Back to home">
+        <div class="btn-glow"></div>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 18 9 12 15 6"></polyline>
+        </svg>
+      </button>
+      <h1 class="app-title">Neural History</h1>
+    </header>
+    
+    <main class="neural-main">
+      <div class="glass-panel history-panel">
+        <div class="panel-glow"></div>
+        <div class="panel-content">
+          <div id="history-list" class="neural-history"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Quantum Compare Modal -->
+  <div id="compare-modal" class="quantum-modal" aria-modal="true" role="dialog" style="display:none;">
+    <div class="modal-backdrop"></div>
+    <div class="modal-content">
+      <div class="modal-glow"></div>
+      <button id="close-compare-modal" class="modal-close" aria-label="Close compare modal">
+        <div class="close-glow"></div>
+        <span>&times;</span>
+      </button>
+      
       <div class="compare-columns">
         <div class="compare-column">
-          <h3>Original</h3>
+          <h3 class="compare-title">Original</h3>
           <pre id="compare-original" class="compare-text"></pre>
         </div>
         <div class="compare-column">
-          <h3>Enhanced</h3>
+          <h3 class="compare-title">Enhanced</h3>
           <pre id="compare-enhanced" class="compare-text"></pre>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Add history view -->
-  <div class="popup-card" id="history-view" style="display:none;">
-    <header class="popup-header" aria-label="Prompt history header">
-      <button id="back-to-home-from-history" class="back-icon" aria-label="Back to home">
-        <svg aria-hidden="true" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-      </button>
-      <h1>Prompt History</h1>
-    </header>
-    <main>
-      <div id="history-list" class="scrollable-content"></div>
-    </main>
-  </div>
+  <!-- Confetti Canvas -->
+  <canvas id="confetti-canvas" class="confetti-canvas" aria-hidden="true"></canvas>
 
   <script src="popup.js"></script>
 </body>

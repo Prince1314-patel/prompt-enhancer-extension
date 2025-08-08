@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "AI Prompt Enhancer",
-  "version": "1.0.0",
-  "description": "Enhance your AI prompts using LangChain and Groq's Llama-3.3-70b model.",
+  "name": "Neural Prompt Enhancer",
+  "version": "2.0.0",
+  "description": "Revolutionary AI prompt enhancement with neural networks and quantum processing. Transform your prompts with crystal-clear neural precision.",
   "permissions": [
     "storage",
     "activeTab",
@@ -23,5 +23,20 @@
       "128": "icons/logo.png"
     }
   },
-  "options_page": "options/options.html"
+  "options_page": "options/options.html",
+  "icons": {
+    "16": "icons/logo.png",
+    "32": "icons/logo.png",
+    "48": "icons/logo.png",
+    "128": "icons/logo.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": ["icons/*"],
+      "matches": ["<all_urls>"]
+    }
+  ],
+  "content_security_policy": {
+    "extension_pages": "script-src 'self'; object-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com;"
+  }
 } 
